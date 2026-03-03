@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quick Links App — Project Summary</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f5f5f0;
+    color: #1a1a1a;
+    padding: 40px 20px;
+  }
+
+  .page {
+    max-width: 820px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  }
+
+  .header {
+    background: #1a4731;
+    padding: 40px 48px;
+    color: white;
+  }
+
+  .header-meta {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 12px;
+  }
+
+  .header h1 {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .header p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 300;
+  }
+
+  .header-details {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .header-detail {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+  }
+
+  .header-detail span {
+    display: block;
+    font-size: 13px;
+    color: white;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .body { padding: 40px 48px; }
+
+  .section { margin-bottom: 36px; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #1a4731;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .section h2 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #111;
+  }
+
+  .section p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #444;
+  }
+
+  .divider {
+    height: 1px;
+    background: #f0f0f0;
+    margin: 8px 0 36px;
+  }
+
+  .problem-box {
+    background: #f9f6f0;
+    border-left: 3px solid #c8922a;
+    padding: 16px 20px;
+    border-radius: 0 4px 4px 0;
+    margin-top: 12px;
+  }
+
+  .problem-box p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #555;
+  }
+
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 12px;
+  }
+
+  .metric {
+    background: #f8f9fc;
+    border: 1px solid #e8eaf0;
+    border-radius: 6px;
+    padding: 18px 20px;
+    text-align: center;
+  }
+
+  .metric-number {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a4731;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .metric-label {
+    font-size: 12px;
+    color: #888;
+    line-height: 1.4;
+  }
+
+  /* TEAM TILES PREVIEW */
+  .tiles-preview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .tile {
+    background: #f8f9fc;
+    border: 1px solid #e8eaf0;
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .tile-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: #1a4731;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .tile-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+    line-height: 1.3;
+  }
+
+  .tile-sub {
+    font-size: 10px;
+    color: #999;
+    margin-top: 2px;
+  }
+
+  /* HOW IT WORKS */
+  .how-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 14px;
+  }
+
+  .how-step {
+    background: #f8f9fc;
+    border: 1px solid #e8eaf0;
+    border-radius: 8px;
+    padding: 18px;
+    text-align: center;
+  }
+
+  .how-step .num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #1a4731;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+  }
+
+  .how-step .title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 6px;
+  }
+
+  .how-step .desc {
+    font-size: 11.5px;
+    color: #777;
+    line-height: 1.5;
+  }
+
+  /* TECH STACK */
+  .stack-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .stack-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #f8f9fc;
+    border: 1px solid #e8eaf0;
+    border-radius: 6px;
+  }
+
+  .stack-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .stack-item strong {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #222;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .stack-item p {
+    font-size: 11.5px;
+    color: #777;
+    line-height: 1.5;
+  }
+
+  /* STATUS BANNER */
+  .status-banner {
+    background: #f0faf4;
+    border: 1px solid #7bc47b;
+    border-radius: 8px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 12px;
+  }
+
+  .status-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+
+  .status-text strong {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a5c1a;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .status-text p {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  /* WHAT WE NEED TABLE */
+  .approvals-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 13px;
+  }
+
+  .approvals-table th {
+    background: #f8f9fc;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #e8eaf0;
+  }
+
+  .approvals-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #444;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .approvals-table tr:last-child td { border-bottom: none; }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .badge-green { background: #e8f5e8; color: #2a7a2a; }
+  .badge-done { background: #e8f0ff; color: #1a3a8a; }
+
+  .footer {
+    padding: 24px 48px;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer p { font-size: 12px; color: #aaa; }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .page { box-shadow: none; border-radius: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-meta">Completed Project — Ready to Publish</div>
+    <h1>Quick Links App</h1>
+    <p>A Zendesk sidebar app that centralizes the most commonly used links across all 9 product support teams</p>
+    <div class="header-details">
+      <div class="header-detail">Proposed &amp; Built by <span>Job Oderoh, Lead Support Engineer</span></div>
+      <div class="header-detail">Submitted to <span>David Mickelson, Director of Support</span></div>
+      <div class="header-detail">Department <span>Customer Support — Entrata</span></div>
+      <div class="header-detail">Status <span>✅ Built — Pending Publish</span></div>
+      <div class="header-detail">Date <span>March 2026</span></div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- THE PROBLEM -->
+    <div class="section">
+      <div class="section-label">The Problem</div>
+      <h2>Support engineers waste time hunting for the same links every day</h2>
+      <div class="problem-box">
+        <p>Entrata's support teams rely on a wide variety of internal tools, documentation pages, and resources spread across bookmarks, Slack messages, pinned tabs, and tribal knowledge. There is no single, consistent location where support engineers can find the links most relevant to their team. New engineers take longer to ramp up, experienced engineers lose time context-switching to find resources, and when links change there is no central place to update them.</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- SCALE -->
+    <div class="section">
+      <div class="section-label">Impact</div>
+      <h2>A small fix with daily impact across the entire support org</h2>
+      <div class="metrics-row">
+        <div class="metric">
+          <div class="metric-number">9</div>
+          <div class="metric-label">Product support teams covered in the app</div>
+        </div>
+        <div class="metric">
+          <div class="metric-number">0</div>
+          <div class="metric-label">Tab switching or searching required — links live inside Zendesk</div>
+        </div>
+        <div class="metric">
+          <div class="metric-number">1</div>
+          <div class="metric-label">Place to update a link — changes reflect instantly for the whole team</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- THE SOLUTION -->
+    <div class="section">
+      <div class="section-label">The Solution</div>
+      <h2>One app, inside Zendesk, always where engineers need it</h2>
+      <p>The Quick Links App lives in the Zendesk sidebar — visible on every ticket without switching tabs. It displays all 9 support team tiles. Engineers click their team, see the most commonly used links for that team, and navigate instantly. Links are stored in a database and can be added, edited, or removed without touching any code.</p>
+
+      <div class="tiles-preview">
+        <div class="tile">
+          <div class="tile-icon">💰</div>
+          <div>
+            <div class="tile-text">Accounting</div>
+            <div class="tile-sub">Click to view links</div>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-icon">⚙️</div>
+          <div>
+            <div class="tile-text">Core</div>
+            <div class="tile-sub">Click to view links</div>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-icon">🔄</div>
+          <div>
+            <div class="tile-text">Core Customer Process</div>
+            <div class="tile-sub">Click to view links</div>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-icon">📊</div>
+          <div>
+            <div class="tile-text">Data &amp; Analytics</div>
+            <div class="tile-sub">Click to view links</div>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-icon">⚡</div>
+          <div>
+            <div class="tile-text">ELI+</div>
+            <div class="tile-sub">Click to view links</div>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-icon">📋</div>
+          <div>
+            <div class="tile-text">Leasing</div>
+            <div class="tile-sub">Click to view links</div>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-icon">📣</div>
+          <div>
+            <div class="tile-text">Marketing</div>
+            <div class="tile-sub">Click to view links</div>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-icon">👤</div>
+          <div>
+            <div class="tile-text">Residents</div>
+            <div class="tile-sub">Click to view links</div>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-icon">✅</div>
+          <div>
+            <div class="tile-text">Resident Verify</div>
+            <div class="tile-sub">Click to view links</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- HOW IT WORKS -->
+    <div class="section">
+      <div class="section-label">How It Works</div>
+      <h2>Simple by design — easy to use, easy to maintain</h2>
+      <div class="how-row">
+        <div class="how-step">
+          <div class="num">1</div>
+          <div class="title">Engineer opens a ticket</div>
+          <div class="desc">The Quick Links app appears automatically in the Zendesk sidebar — no extra steps.</div>
+        </div>
+        <div class="how-step">
+          <div class="num">2</div>
+          <div class="title">Click your team tile</div>
+          <div class="desc">Nine team tiles are displayed. One click expands that team's most-used links.</div>
+        </div>
+        <div class="how-step">
+          <div class="num">3</div>
+          <div class="title">Navigate instantly</div>
+          <div class="desc">Links open directly. No bookmarks, no Slack searching, no pinned tabs needed.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- TECH -->
+    <div class="section">
+      <div class="section-label">Technical Overview</div>
+      <h2>Lightweight, maintainable, no ongoing engineering required</h2>
+      <div class="stack-row">
+        <div class="stack-item">
+          <div class="stack-icon">🎫</div>
+          <div>
+            <strong>Zendesk Sidebar App</strong>
+            <p>Built as a native Zendesk app — lives inside the sidebar on every ticket. No separate tool to open or remember.</p>
+          </div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon">🗄️</div>
+          <div>
+            <strong>Supabase (Database)</strong>
+            <p>Links are stored in a database. Add, edit, or delete links anytime without touching code. Changes are instant.</p>
+          </div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon">📄</div>
+          <div>
+            <strong>Single HTML File</strong>
+            <p>The entire app is one HTML file. Simple, fast, and easy to update if the UI ever needs changing.</p>
+          </div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon">🔧</div>
+          <div>
+            <strong>manifest.json</strong>
+            <p>Standard Zendesk app configuration file that registers the app and defines where it appears in the UI.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- STATUS -->
+    <div class="section">
+      <div class="section-label">Current Status</div>
+      <h2>Built, tested, and ready to publish</h2>
+      <div class="status-banner">
+        <div class="status-icon">🚀</div>
+        <div class="status-text">
+          <strong>This project is complete — no development work remains.</strong>
+          <p>The app has been fully built and tested. All 9 team tiles are functional, links load from the database correctly, and the app renders properly in the Zendesk sidebar. Publishing requires only Zendesk admin approval to install the app in the company account. There is no ongoing cost, no infrastructure to manage, and no engineering support required after launch.</p>
+        </div>
+      </div>
+
+      <!-- COST & INSTALL CALLOUT -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px;">
+        <div style="background:#f0faf4; border:1px solid #7bc47b; border-radius:8px; padding:16px 18px; display:flex; gap:12px; align-items:flex-start;">
+          <div style="font-size:20px;">💲</div>
+          <div>
+            <div style="font-size:13px; font-weight:600; color:#1a5c1a; margin-bottom:4px;">$0 Project Cost</div>
+            <div style="font-size:12px; color:#555; line-height:1.5;">No cost to build, deploy, or run. No re-uploads required unless new features are added in the future.</div>
+          </div>
+        </div>
+        <div style="background:#f0faf4; border:1px solid #7bc47b; border-radius:8px; padding:16px 18px; display:flex; gap:12px; align-items:flex-start;">
+          <div style="font-size:20px;">💻</div>
+          <div>
+            <div style="font-size:13px; font-weight:600; color:#1a5c1a; margin-bottom:4px;">No Local Installs</div>
+            <div style="font-size:12px; color:#555; line-height:1.5;">Nothing to install on engineer machines. The app runs entirely inside Zendesk — available instantly to all support engineers on publish.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOOM DEMO -->
+      <div style="margin-top:14px; background:#f8f9fc; border:1px solid #e8eaf0; border-radius:8px; padding:18px 20px; display:flex; align-items:center; gap:16px;">
+        <div style="font-size:28px; flex-shrink:0;">🎬</div>
+        <div style="flex:1;">
+          <div style="font-size:13px; font-weight:600; color:#222; margin-bottom:4px;">Watch the Live Demo</div>
+          <div style="font-size:12px; color:#777; margin-bottom:10px;">See the Quick Links app running inside Zendesk — all 9 team tiles, link navigation, and the database-driven link management in action.</div>
+          <a href="https://www.loom.com/share/fb487686684e42b1a6d51b8f3589409c"
+             target="_blank"
+             style="display:inline-block; background:#1a4731; color:white; font-size:12px; font-weight:600; padding:8px 18px; border-radius:6px; text-decoration:none; letter-spacing:0.3px;">
+            ▶&nbsp; View Loom Demo →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- WHAT WE NEED -->
+    <div class="section">
+      <div class="section-label">What We Need</div>
+      <h2>One approval to go live</h2>
+      <table class="approvals-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Purpose</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Zendesk App Publish Approval</strong></td>
+            <td>Install the Quick Links app in the Entrata Zendesk account so all support engineers can access it</td>
+            <td><span class="badge badge-green">Pending approval</span></td>
+          </tr>
+          <tr>
+            <td><strong>Supabase Database</strong></td>
+            <td>Already provisioned and populated with initial links for all 9 teams. Free tier account created with company email for demo purposes — no cost incurred.</td>
+            <td><span class="badge badge-done">Complete</span></td>
+          </tr>
+          <tr>
+            <td><strong>App Build</strong></td>
+            <td>HTML app and manifest.json fully built and tested</td>
+            <td><span class="badge badge-done">Complete</span></td>
+          </tr>
+          <tr>
+            <td><strong>Link Population</strong></td>
+            <td>Initial links for each of the 9 teams added to the database and ready</td>
+            <td><span class="badge badge-done">Complete</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>Entrata Support Engineering — Project Summary — Confidential</p>
+    <p>March 2026</p>
+  </div>
+
+</div>
+</body>
+</html>
