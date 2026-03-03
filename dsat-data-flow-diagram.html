@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSAT Intelligence — Data Flow Diagram</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f5f5f0;
+    color: #1a1a1a;
+    padding: 40px 20px;
+  }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  }
+
+  .header {
+    background: #1B3A6B;
+    padding: 32px 48px;
+    color: white;
+  }
+
+  .header-meta {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 8px;
+  }
+
+  .header h1 { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+  .header p { font-size: 13px; color: rgba(255,255,255,0.65); }
+
+  .body { padding: 40px 48px; }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 36px;
+    padding: 16px 20px;
+    background: #f8f9fc;
+    border-radius: 6px;
+    border: 1px solid #e8eaf0;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #555;
+  }
+
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .legend-line {
+    width: 24px;
+    height: 2px;
+    flex-shrink: 0;
+  }
+
+  /* DIAGRAM */
+  .diagram {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .layer {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    position: relative;
+  }
+
+  .layer-label {
+    width: 110px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    padding-right: 16px;
+  }
+
+  .layer-label-inner {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #aaa;
+    writing-mode: horizontal-tb;
+    text-align: right;
+    line-height: 1.4;
+  }
+
+  .layer-content {
+    flex: 1;
+    padding: 20px 0;
+    border-left: 2px solid #eee;
+    padding-left: 24px;
+    position: relative;
+  }
+
+  .layer-content::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ddd;
+  }
+
+  .nodes {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .node {
+    border-radius: 8px;
+    padding: 14px 18px;
+    min-width: 140px;
+    position: relative;
+  }
+
+  .node-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .node-sub {
+    font-size: 11px;
+    line-height: 1.5;
+    opacity: 0.75;
+  }
+
+  .node-tag {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-top: 8px;
+  }
+
+  /* Node colors */
+  .node-zendesk { background: #fff8e8; border: 1px solid #f0d070; color: #7a5500; }
+  .node-zendesk .node-tag { background: #f0d070; color: #7a5500; }
+
+  .node-webhook { background: #e8f0ff; border: 1px solid #9ab4f0; color: #1a3a8a; }
+  .node-webhook .node-tag { background: #9ab4f0; color: #1a3a8a; }
+
+  .node-db { background: #e8f5e8; border: 1px solid #7bc47b; color: #1a5c1a; }
+  .node-db .node-tag { background: #7bc47b; color: #1a5c1a; }
+
+  .node-ai { background: #f5e8ff; border: 1px solid #c07be0; color: #5a1a8a; }
+  .node-ai .node-tag { background: #c07be0; color: #5a1a8a; }
+
+  .node-slack { background: #ffeef8; border: 1px solid #e07bc0; color: #8a1a5a; }
+  .node-slack .node-tag { background: #e07bc0; color: #8a1a5a; }
+
+  .node-redact { background: #fff0e8; border: 1px solid #f0a070; color: #8a3a00; }
+  .node-redact .node-tag { background: #f0a070; color: #8a3a00; }
+
+  /* Arrows between layers */
+  .arrow-row {
+    display: flex;
+    padding-left: 110px;
+  }
+
+  .arrow-block {
+    flex: 1;
+    padding-left: 24px;
+    display: flex;
+    gap: 12px;
+    padding: 6px 0 6px 134px;
+  }
+
+  .arrow-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    min-width: 140px;
+  }
+
+  .arrow-line {
+    width: 2px;
+    height: 20px;
+    background: #ddd;
+    position: relative;
+  }
+
+  .arrow-line.secure { background: #7bc47b; }
+  .arrow-line.redacted { background: #f0a070; }
+  .arrow-line.purged { background: #e07bc0; }
+
+  .arrow-label {
+    font-size: 9px;
+    color: #aaa;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+
+  .arrow-label.secure { color: #2a7a2a; }
+  .arrow-label.redacted { color: #b35c00; }
+  .arrow-label.purged { color: #8a1a5a; }
+
+  /* DATA NOTES TABLE */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 36px;
+    font-size: 13px;
+  }
+
+  .data-table th {
+    background: #1B3A6B;
+    color: white;
+    padding: 10px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  .data-table td {
+    padding: 11px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #444;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:nth-child(even) td { background: #fafafa; }
+
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .pill-green { background: #e8f5e8; color: #2a7a2a; }
+  .pill-orange { background: #fff3e0; color: #b35c00; }
+  .pill-blue { background: #e8f0ff; color: #1a3a8a; }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1B3A6B;
+    letter-spacing: 0.3px;
+    margin: 32px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e8eaf0;
+  }
+
+  .footer {
+    padding: 20px 48px;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .footer p { font-size: 11px; color: #bbb; }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .page { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-meta">InfoSec Review Document — Entrata Support Engineering</div>
+    <h1>DSAT Intelligence System — Data Flow Diagram</h1>
+    <p>Shows all data movement between systems, what is stored, where, and for how long</p>
+  </div>
+
+  <div class="body">
+
+    <!-- LEGEND -->
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#f0d070"></div>
+        External / Existing System
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#9ab4f0"></div>
+        New System (our code)
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#7bc47b"></div>
+        Data Storage (Supabase)
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#c07be0"></div>
+        AI Processing (Anthropic)
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#f0a070"></div>
+        PII Redaction Step
+      </div>
+      <div class="legend-line" style="background:#7bc47b"></div>
+      <span style="font-size:12px;color:#2a7a2a">Encrypted / Secure transfer</span>
+      <div class="legend-line" style="background:#f0a070; margin-left:8px"></div>
+      <span style="font-size:12px;color:#b35c00">Redacted data only</span>
+      <div class="legend-line" style="background:#e07bc0; margin-left:8px"></div>
+      <span style="font-size:12px;color:#8a1a5a">Purged after use</span>
+    </div>
+
+    <!-- DIAGRAM -->
+    <div class="diagram">
+
+      <!-- Layer 1: Zendesk -->
+      <div class="layer">
+        <div class="layer-label"><div class="layer-label-inner">Source</div></div>
+        <div class="layer-content">
+          <div class="nodes">
+            <div class="node node-zendesk">
+              <div class="node-title">Zendesk</div>
+              <div class="node-sub">Existing ticketing system.<br>Source of all ticket data.</div>
+              <div class="node-tag">External</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrow 1 -->
+      <div class="arrow-row">
+        <div class="arrow-block">
+          <div class="arrow-item">
+            <div class="arrow-line secure"></div>
+            <div class="arrow-label secure">HTTPS + Shared Secret</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layer 2: Webhook -->
+      <div class="layer">
+        <div class="layer-label"><div class="layer-label-inner">Detection</div></div>
+        <div class="layer-content">
+          <div class="nodes">
+            <div class="node node-webhook">
+              <div class="node-title">dsat-webhook</div>
+              <div class="node-sub">Receives Zendesk events.<br>Evaluates 3 trigger types.<br>No data stored here.</div>
+              <div class="node-tag">Edge Function</div>
+            </div>
+            <div class="node node-redact">
+              <div class="node-title">PII Redaction</div>
+              <div class="node-sub">Runs in-memory before<br>anything is stored.<br>Emails, phones → [REDACTED]</div>
+              <div class="node-tag">In-flight</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrow 2 -->
+      <div class="arrow-row">
+        <div class="arrow-block">
+          <div class="arrow-item">
+            <div class="arrow-line secure"></div>
+            <div class="arrow-label secure">Redacted data only</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layer 3: Database -->
+      <div class="layer">
+        <div class="layer-label"><div class="layer-label-inner">Storage</div></div>
+        <div class="layer-content">
+          <div class="nodes">
+            <div class="node node-db">
+              <div class="node-title">tickets table</div>
+              <div class="node-sub">Ticket ID, status, reply<br>count, agent ID, JIRA flag.<br>No PII. Permanent.</div>
+              <div class="node-tag">Supabase</div>
+            </div>
+            <div class="node node-db">
+              <div class="node-title">dsat_events table</div>
+              <div class="node-sub">Event type, trigger keyword,<br>redacted comment (temporary).<br>Comment purged after AI.</div>
+              <div class="node-tag">Supabase</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrow 3 -->
+      <div class="arrow-row">
+        <div class="arrow-block">
+          <div class="arrow-item">
+            <div class="arrow-line secure"></div>
+            <div class="arrow-label secure">Redacted text only · HTTPS</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layer 4: AI -->
+      <div class="layer">
+        <div class="layer-label"><div class="layer-label-inner">AI Analysis</div></div>
+        <div class="layer-content">
+          <div class="nodes">
+            <div class="node node-ai">
+              <div class="node-title">Claude API</div>
+              <div class="node-sub">Receives redacted text only.<br>Returns: category, severity,<br>summary, recommendations.<br>Does not retain input data.</div>
+              <div class="node-tag">Anthropic API</div>
+            </div>
+            <div class="node node-db" style="margin-top:0">
+              <div class="node-title">dsat_analysis table</div>
+              <div class="node-sub">AI output only. No raw text.<br>Severity, category, summary,<br>recommendations stored.</div>
+              <div class="node-tag">Supabase</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrow 4 -->
+      <div class="arrow-row">
+        <div class="arrow-block">
+          <div class="arrow-item">
+            <div class="arrow-line secure"></div>
+            <div class="arrow-label secure">Only if severity ≥ 7 · HTTPS</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layer 5: Slack -->
+      <div class="layer">
+        <div class="layer-label"><div class="layer-label-inner">Alerting</div></div>
+        <div class="layer-content">
+          <div class="nodes">
+            <div class="node node-slack">
+              <div class="node-title">Slack #dsat-alerts</div>
+              <div class="node-sub">AI summary, recommendations,<br>next action, ticket ID.<br>No PII. Internal channel only.</div>
+              <div class="node-tag">Slack</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DATA INVENTORY TABLE -->
+    <div class="section-title">Data Inventory — What Is Stored Where</div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Data Element</th>
+          <th>System</th>
+          <th>Contains PII?</th>
+          <th>Retention</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Zendesk Ticket ID</td>
+          <td>Supabase</td>
+          <td><span class="pill pill-green">No</span></td>
+          <td>Permanent</td>
+          <td>Link back to source ticket in Zendesk</td>
+        </tr>
+        <tr>
+          <td>Ticket status, reply count, agent ID</td>
+          <td>Supabase</td>
+          <td><span class="pill pill-green">No</span></td>
+          <td>Permanent</td>
+          <td>Trigger evaluation and dashboard metrics</td>
+        </tr>
+        <tr>
+          <td>CSAT score (numeric only)</td>
+          <td>Supabase</td>
+          <td><span class="pill pill-green">No</span></td>
+          <td>Permanent</td>
+          <td>Severity scoring input</td>
+        </tr>
+        <tr>
+          <td>Frustration keyword detected</td>
+          <td>Supabase</td>
+          <td><span class="pill pill-green">No</span></td>
+          <td>Permanent</td>
+          <td>Record which keyword triggered the event</td>
+        </tr>
+        <tr>
+          <td>Redacted comment text</td>
+          <td>Supabase (temporary)</td>
+          <td><span class="pill pill-orange">Redacted</span></td>
+          <td>Purged after AI processing (~2 min)</td>
+          <td>Provide context to AI for analysis only</td>
+        </tr>
+        <tr>
+          <td>AI summary, recommendations, next action</td>
+          <td>Supabase</td>
+          <td><span class="pill pill-green">No</span></td>
+          <td>Permanent</td>
+          <td>Support team review and Slack alerts</td>
+        </tr>
+        <tr>
+          <td>Severity / churn risk scores</td>
+          <td>Supabase</td>
+          <td><span class="pill pill-green">No</span></td>
+          <td>Permanent</td>
+          <td>Dashboard analytics and alert thresholding</td>
+        </tr>
+        <tr>
+          <td>Comment text sent to Claude API</td>
+          <td>Anthropic (in transit)</td>
+          <td><span class="pill pill-orange">Redacted</span></td>
+          <td>Not retained by Anthropic (API terms)</td>
+          <td>AI classification and summarization</td>
+        </tr>
+        <tr>
+          <td>Slack alert message</td>
+          <td>Slack</td>
+          <td><span class="pill pill-green">No</span></td>
+          <td>Per Slack workspace retention policy</td>
+          <td>Internal team notification only</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- EXTERNAL SERVICES -->
+    <div class="section-title">External Services Summary</div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Provider</th>
+          <th>Data Sent</th>
+          <th>Compliance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Database</strong></td>
+          <td>Supabase (hosted Postgres)</td>
+          <td>Ticket metadata, AI output, redacted comments (temporary)</td>
+          <td><span class="pill pill-green">SOC 2 Type II</span></td>
+        </tr>
+        <tr>
+          <td><strong>AI Processing</strong></td>
+          <td>Anthropic Claude API</td>
+          <td>Redacted comment text only — no raw PII</td>
+          <td><span class="pill pill-blue">API — no training on data</span></td>
+        </tr>
+        <tr>
+          <td><strong>Alerting</strong></td>
+          <td>Slack (existing company tool)</td>
+          <td>AI-generated summary, ticket ID, agent name</td>
+          <td><span class="pill pill-green">Existing approved tool</span></td>
+        </tr>
+        <tr>
+          <td><strong>Source</strong></td>
+          <td>Zendesk (existing company tool)</td>
+          <td>Sends ticket events to our webhook (outbound only)</td>
+          <td><span class="pill pill-green">Existing approved tool</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="footer">
+    <p>Entrata Support Engineering — InfoSec Review Document — Confidential</p>
+    <p>March 2026</p>
+  </div>
+
+</div>
+</body>
+</html>
